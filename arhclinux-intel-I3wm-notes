@@ -1,0 +1,112 @@
+#########################################
+######[INICIAR SSH PARA INSTALAR.]#######
+passwd
+systemctl start sshd
+ip a
+#########################################
+
+##############[INICIAR WIFI]#############
+wifi-menu
+#########################################
+
+pacstrap /mnt base base-devel grub ntfs-3g networkmanager gvfs efibootmgr netctl wpa_supplicant dialog intel-ucode htop openssh
+
+genfstab -pU /mnt >> /mnt/etc/fstab
+
+arch-chroot /mnt
+
+echo heros > /etc/hostname
+
+ln -sf /usr/share/zoneinfo/America/Panama /etc/localtime
+
+echo es_PA.UTF-8 UTF-8 >/etc/locale.gen
+echo LANG=es_PA.UTF-8 >/etc/locale.conf
+echo LANG=es_PA.UTF-8 >>/etc/environment
+echo LC_TIME=es_PA.UTF-8 >>/etc/environment
+
+locale-gen
+
+hwclock -w
+
+echo KEYMAP=us > /etc/vconsole.conf
+
+grub-install --efi-directory=/boot/efi --bootloader-id='Arch Linux' --target=x86_64-efi
+
+grub-mkconfig -o /boot/grub/grub.cfg
+
+nano /etc/sudoers
+
+passwd
+
+useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash kraleon
+
+passwd kraleon
+
+exit
+
+umount -R /mnt
+
+reboot
+
+systemctl enable sshd.service
+systemctl start sshd.service
+##############[INICIAR WIFI]#############
+wifi-menu
+ls /etc/netctl/
+netctl enable wlan0
+#########################################
+reboot
+
+sudo pacman -S git
+cd /tmp
+gpg --recv-key 465022E743D71E39
+git clone https://aur.archlinux.org/aurman.git
+cd aurman
+makepkg -si
+
+aurman -S wd719x-firmware
+aurman -S aic94xx-firmware
+
+
+sudo vi /etc/modprobe.d/alsa-base.conf
+	options snd_mia index=0
+	options snd_hda_intel index=1
+
+sudo pacman -S xorg-server xorg-xinit xorg-server-common xf86-video-intel mesa mesa-libgl 
+
+
+sudo vi /etc/X11/xorg.conf.d/20-intel.conf
+Section "Device"
+	Identifier  "Intel Graphics"
+	Driver      "intel"
+	Option      "DRI" "2"             # DRI3 is now default 
+	#Option      "AccelMethod"  "sna" # default
+	#Option      "AccelMethod"  "uxa" # fallback
+EndSection
+
+
+sudo pacman -S pulseaudio pulseaudio-alsa alsa-utils alsa-plugins alsa-lib pavucontrol
+
+sudo pacman -S ttf-liberation ttf-bitstream-vera ttf-dejavu ttf-droid ttf-freefont artwiz-fonts acpi
+
+
+sudo pacman -S linux-ck-atom
+sudo mkinitcpio -p linux-ck-atom
+
+grub-mkconfig -o /boot/grub/grub.cfg
+
+aurman -S solarized-dark-themes
+
+sudo pacman -S i3-gaps i3blocks i3lock i3status dunst lxappearance rxvt-unicode rofi dmenu pcmanfm
+
+pacman -Rsdn $(pacman -Qqdt)
+
+
+
+rofi -show run -modi run -location 1 -width 100 -lines 2 -line-margin 0 -line-padding 1 -separator-style none -font "mono 10" -columns 9 -bw 0 -disable-history -hide-scrollbar -color-window "#222222, #222222, #b1b4b3" -color-normal "#222222, #b1b4b3, #222222, #005577, #b1b4b3" -color-active "#222222, #b1b4b3, #222222, #007763, #b1b4b3" -color-urgent "#222222, #b1b4b3, #222222, #77003d, #b1b4b3" -kb-row-select "Tab" -kb-row-tab ""
+
+pacman -Rsdn $(pacman -Qqdt)
+
+compton
+feh
+pcmanfm

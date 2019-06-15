@@ -1,0 +1,133 @@
+#########################################
+######[INICIAR SSH PARA INSTALAR.]#######
+passwd
+systemctl start sshd
+ip a
+#########################################
+
+pacstrap /mnt base base-devel grub ntfs-3g networkmanager gvfs efibootmgr NetworkManager intel-ucode htop openssh acpi
+
+genfstab -pU /mnt >> /mnt/etc/fstab
+
+arch-chroot /mnt
+
+echo heros > /etc/hostname
+
+ln -sf /usr/share/zoneinfo/America/Panama /etc/localtime
+
+echo es_PA.UTF-8 UTF-8 >/etc/locale.gen
+echo LANG=es_PA.UTF-8 >/etc/locale.conf
+echo LANG=es_PA.UTF-8 >>/etc/environment
+echo LC_TIME=es_PA.UTF-8 >>/etc/environment
+
+vim ~/.bashrc
+export LANGUAGE=es_PA.UTF-8
+export LANG=es_PA.UTF-8
+export LC_ALL=es_PA.UTF-8
+
+locale-gen
+
+hwclock -w
+
+echo KEYMAP=us > /etc/vconsole.conf
+
+grub-install --efi-directory=/boot/efi --bootloader-id='Arch Linux' --target=x86_64-efi
+
+grub-mkconfig -o /boot/grub/grub.cfg
+
+nano /etc/sudoers
+
+passwd
+
+useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash kraleon
+
+passwd kraleon
+
+exit
+
+umount -R /mnt
+
+reboot
+
+systemctl enable sshd.service
+systemctl start sshd.service
+systemctl enable NetworkManager
+systemctl start NetworkManager
+systemctl start systemd-resolved.service
+systemctl status dhcpd.service
+
+
+sudo pacman -S git
+cd /tmp
+gpg --recv-key 465022E743D71E39
+git clone https://aur.archlinux.org/aurman.git
+cd aurman
+makepkg -si
+
+aurman -S aic94xx-firmware
+aurman -S wd719x-firmware
+aurman -S laptop-mode-tools
+systemctl enable laptop-mode.service
+
+
+aurman -S linux-ck-haswell
+sudo mkinitcpio -p linux-ck-atom
+grub-mkconfig -o /boot/grub/grub.cfg
+reboot
+
+
+pacman -S nvidia  nvidia-utils nvidia-settings cuda nvidia-dkms lib32-nvidia-utils xorg-server xorg-xinit arc-icon-theme arc-solid-gtk-theme
+
+mkdir /etc/pacman.d/hooks/
+
+vim /etc/pacman.d/hooks/nvidia.hook
+
+[Trigger]
+Operation=Install
+Operation=Upgrade
+Operation=Remove
+Type=Package
+Target=nvidia
+
+[Action]
+Depends=mkinitcpio
+When=PostTransaction
+Exec=/usr/bin/mkinitcpio -P
+
+sudo echo blacklist nouveau >> /etc/modprobe.d/nvidia.conf
+
+
+sudo vim /etc/mkinitcpio.conf
+MODULES=(fuse ext4 nvidia nvidia_modeset nvidia_uvm nvidia_drm)
+HOOKS=(base udev autodetect modconf block filesystems keyboard fsck)
+
+sudo vim /etc/default/grub
+GRUB_CMDLINE_LINUX_DEFAULT="nvidia-drm.modeset=1 quiet"
+
+sudo pacman -S dbus-x11
+systemctl set-default graphical.target
+systemctl status pulseaudio.service
+
+
+sudo pacman -S pulseaudio pulseaudio-alsa alsa-utils alsa-plugins alsa-lib pavucontrol
+
+sudo pacman -S ttf-liberation ttf-bitstream-vera ttf-dejavu ttf-droid ttf-freefont artwiz-fonts ttf-ubuntu-font-family hunspell-es_pa
+
+
+sudo pacman -S i3-gaps i3blocks i3lock i3status dunst lxappearance rxvt-unicode rofi dmenu pcmanfm
+
+pacman -Rsdn $(pacman -Qqdt)
+
+sudp pacman -S firefox firefox-i18n-es-mx
+
+pacman -Rsdn $(pacman -Qqdt)
+pacman -Scc
+
+
+rofi -show run -modi run -location 1 -width 100 -lines 2 -line-margin 0 -line-padding 1 -separator-style none -font "mono 10" -columns 9 -bw 0 -disable-history -hide-scrollbar -color-window "#222222, #222222, #b1b4b3" -color-normal "#222222, #b1b4b3, #222222, #005577, #b1b4b3" -color-active "#222222, #b1b4b3, #222222, #007763, #b1b4b3" -color-urgent "#222222, #b1b4b3, #222222, #77003d, #b1b4b3" -kb-row-select "Tab" -kb-row-tab ""
+
+pacman -Rsdn $(pacman -Qqdt)
+
+compton
+feh
+pcmanfm
