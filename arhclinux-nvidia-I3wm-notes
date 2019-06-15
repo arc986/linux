@@ -66,6 +66,7 @@ cd aurman
 makepkg -si
 
 http://repo-ck.com
+pacman -S linux-ck-haswell
 sudo mkinitcpio -p linux-ck-atom
 grub-mkconfig -o /boot/grub/grub.cfg
 reboot
