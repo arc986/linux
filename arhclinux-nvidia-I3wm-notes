@@ -42,7 +42,7 @@ passwd
 
 useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash <$USER>
 
-passwd kraleon
+passwd <$USER>
 
 exit
 
