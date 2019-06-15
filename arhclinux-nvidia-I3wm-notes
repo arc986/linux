@@ -65,17 +65,17 @@ git clone https://aur.archlinux.org/aurman.git
 cd aurman
 makepkg -si
 
-aurman -S aic94xx-firmware
-aurman -S wd719x-firmware
-aurman -S laptop-mode-tools
-systemctl enable laptop-mode.service
-
-
-aurman -S linux-ck-haswell
+http://repo-ck.com
 sudo mkinitcpio -p linux-ck-atom
 grub-mkconfig -o /boot/grub/grub.cfg
 reboot
 
+
+
+aurman -S aic94xx-firmware
+aurman -S wd719x-firmware
+aurman -S laptop-mode-tools
+systemctl enable laptop-mode.service
 
 pacman -S nvidia  nvidia-utils nvidia-settings cuda nvidia-dkms lib32-nvidia-utils xorg-server xorg-xinit arc-icon-theme arc-solid-gtk-theme
 
