@@ -20,7 +20,7 @@ echo LANG=es_PA.UTF-8 >/etc/locale.conf
 echo LANG=es_PA.UTF-8 >>/etc/environment
 echo LC_TIME=es_PA.UTF-8 >>/etc/environment
 
-vim ~/.bashrc
+vi ~/.bashrc
 export LANGUAGE=es_PA.UTF-8
 export LANG=es_PA.UTF-8
 export LC_ALL=es_PA.UTF-8
@@ -36,6 +36,7 @@ grub-install --efi-directory=/boot/efi --bootloader-id='Arch Linux' --target=x86
 grub-mkconfig -o /boot/grub/grub.cfg
 
 nano /etc/sudoers
+%wheel ALL=(ALL) ALL
 
 passwd
 
