@@ -5,7 +5,7 @@ systemctl start sshd
 ip a
 #########################################
 
-pacstrap /mnt base base-devel grub ntfs-3g networkmanager gvfs efibootmgr NetworkManager intel-ucode htop openssh acpi
+pacstrap /mnt base base-devel grub ntfs-3g networkmanager gvfs efibootmgr intel-ucode htop openssh acpi
 
 genfstab -pU /mnt >> /mnt/etc/fstab
 
