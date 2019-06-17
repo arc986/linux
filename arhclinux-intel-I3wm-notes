@@ -2,11 +2,11 @@
 ######[INICIAR SSH PARA INSTALAR.]#######
 passwd
 systemctl start sshd
-ip a
 #########################################
 
 ##############[INICIAR WIFI]#############
 wifi-menu
+ip a
 #########################################
 
 pacstrap /mnt base base-devel grub ntfs-3g networkmanager gvfs efibootmgr netctl wpa_supplicant dialog intel-ucode htop openssh
