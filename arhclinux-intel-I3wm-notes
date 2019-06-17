@@ -96,11 +96,12 @@ sudo pacman -S ttf-liberation ttf-bitstream-vera ttf-dejavu ttf-droid ttf-freefo
 sudo pacman -S linux-ck-atom
 sudo mkinitcpio -p linux-ck-atom
 
-grub-mkconfig -o /boot/grub/grub.cfg
+sudo grub-mkconfig -o /boot/grub/grub.cfg
 
-aurman -S solarized-dark-themes
 
-sudo pacman -S i3-gaps i3blocks i3lock i3status dunst lxappearance rxvt-unicode rofi dmenu pcmanfm
+sudo pacman -S i3-wm i3lock i3status dunst lxdm-gtk3 lxappearance rxvt-unicode dmenu ranger vlc atool elinks ffmpegthumbnailer highlight libcaca mediainfo odt2txt perl-image-exiftool poppler python-chardet
+sudo vi /etc/lxdm/lxdm.conf
+	session=/usr/bin/i3
 
 pacman -Rsdn $(pacman -Qqdt)
 
