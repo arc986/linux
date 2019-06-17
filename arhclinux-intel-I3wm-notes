@@ -26,7 +26,10 @@ echo LC_TIME=es_PA.UTF-8 >>/etc/environment
 
 locale-gen
 
-hwclock -w
+este 
+	hwclock -w
+o 
+	hwclock --systohc --utc
 
 echo KEYMAP=us > /etc/vconsole.conf
 
