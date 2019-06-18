@@ -268,6 +268,13 @@ sudo vim /etc/lxdm/lxdm.conf
 sudo systemctl enable lxdm.service
 ```
 
+## Reducir el numero de terminales gertty a solo 2 ctrl+alt+F1 estara corriendo I3 y ctrl+alt+F2 por temas de emergencias 
+```bash
+sudo vim /etc/systemd/logind.conf
+#se descomenta y se coloca el nuero 2
+NAutoVTs=2
+```
+
 ## Instalar si se queire ventanas trasparentes
 ```bash
 sudo pacman -S compton
