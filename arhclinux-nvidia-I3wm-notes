@@ -5,7 +5,7 @@ systemctl start sshd
 ip a
 #########################################
 
-pacstrap /mnt base base-devel grub ntfs-3g networkmanager gvfs efibootmgr intel-ucode htop openssh acpi
+pacstrap /mnt base base-devel grub ntfs-3g networkmanager gvfs efibootmgr intel-ucode htop openssh
 
 genfstab -pU /mnt >> /mnt/etc/fstab
 
@@ -121,29 +121,22 @@ sudo reboot
 
 sudo nvidia-xconfig
 
-systemctl status pulseaudio.service
-
 sudo pacman -S ttf-liberation ttf-bitstream-vera ttf-dejavu ttf-droid ttf-freefont ttf-font-awesome ttf-ubuntu-font-family hunspell-es_pa
 
-
-sudo pacman -S i3-gaps i3blocks i3lock i3status notify-osd lxdm-gtk3 lxappearance rxvt-unicode rofi dmenu pcmanfm arc-icon-theme arc-solid-gtk-theme
-
+sudo pacman -S i3-wm i3lock i3status dunst lxdm-gtk3 lxappearance rxvt-unicode dmenu compton feh
+sudo vi /etc/lxdm/lxdm.conf
+	session=/usr/bin/i3
 sudo systemctl enable lxdm.service
 
-sudo reboot
+##Administrador de Archivos Ranger
+sudo pacman -S ranger  atool elinks ffmpegthumbnailer highlight libcaca mediainfo odt2txt perl-image-exiftool poppler python-chardet
 
-pacman -Rsdn $(pacman -Qqdt)
+###Reproductor de musica y video
+sudo pacman -S mplayer
+
+sudo reboot
 
 sudp pacman -S firefox firefox-i18n-es-mx
 
 pacman -Rsdn $(pacman -Qqdt)
 pacman -Scc
-
-
-rofi -show run -modi run -location 1 -width 100 -lines 2 -line-margin 0 -line-padding 1 -separator-style none -font "mono 10" -columns 9 -bw 0 -disable-history -hide-scrollbar -color-window "#222222, #222222, #b1b4b3" -color-normal "#222222, #b1b4b3, #222222, #005577, #b1b4b3" -color-active "#222222, #b1b4b3, #222222, #007763, #b1b4b3" -color-urgent "#222222, #b1b4b3, #222222, #77003d, #b1b4b3" -kb-row-select "Tab" -kb-row-tab ""
-
-pacman -Rsdn $(pacman -Qqdt)
-
-compton
-feh
-pcmanfm
