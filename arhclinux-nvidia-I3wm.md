@@ -18,6 +18,14 @@ wifi-menu
 ip a
 ```
 
+## Montamos los discos
+```bash
+mount /dev/sda2 /mnt
+mkdir -p /mnt/boot/efi
+mount /dev/sda1 /mnt/boot/efi
+```
+
+
 # 2. Instalar sistema base
 ```bash
 pacstrap /mnt base base-devel grub ntfs-3g networkmanager gvfs efibootmgr intel-ucode htop openssh
