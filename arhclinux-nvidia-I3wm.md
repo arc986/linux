@@ -46,6 +46,10 @@ arch-chroot /mnt
 #Nombre de la pc en minuscula sin acentos
 export HOMBREPC=""
 echo $HOMBREPC > /etc/hostname
+#IPv4
+echo 127.0.0.1	localhost	$HOMBREPC >> /etc/hosts
+#IPv6
+echo ::1	localhost	$HOMBREPC >> /etc/hosts
 ```
 ## Configurar zona Horaria
 ```bash
@@ -255,7 +259,7 @@ sudo pacman -S ttf-liberation ttf-bitstream-vera ttf-dejavu ttf-droid ttf-freefo
 ```
 ## Instalación de la interface grafica i3wm
 ```bash
-sudo pacman -S i3-wm i3lock i3status dunst lxdm-gtk3 lxappearance rxvt-unicode dmenu compton feh
+sudo pacman -S i3-gaps i3lock i3blocks dunst lxdm-gtk3 lxappearance rxvt-unicode dmenu
 ```
 ## Configuramos e iniciamos el servicio lxdm para que inicie i3wm por defecto
 ```bash
@@ -264,9 +268,19 @@ sudo vim /etc/lxdm/lxdm.conf
 sudo systemctl enable lxdm.service
 ```
 
-## se instala el administrador de Archivos Ranger
+## Instalar si se queire ventanas trasparentes
 ```bash
-sudo pacman -S ranger  atool elinks ffmpegthumbnailer highlight libcaca mediainfo odt2txt perl-image-exiftool poppler python-chardet
+sudo pacman -S compton
+```
+
+## Instalar si se queire wallpapers
+```bash
+sudo pacman -S feh
+```
+
+## se instala el administrador de Archivos Midnight Commander
+```bash
+sudo pacman -S mc
 ```
 
 ## Reproductor de musica y video
@@ -286,6 +300,7 @@ sudo systemctl status iptables
 ## Eliminar el beep de la terminal
 ```bash
 sudo pacman -S xorg-xset
+#se pone dentro del archivo config del i3
 xset b off
 ```
 
@@ -344,7 +359,7 @@ sudo reboot
 journalctl -b | grep Fail
 ```
 
-## limpiamos nustro sistema de paquetes huerfanos y del cache de las instalaciones
+## limpiamos nuestro sistema de paquetes huerfanos y del cache de las instalaciones
 ```bash
 pacman -Rsdn $(pacman -Qqdt)
 pacman -Scc
