@@ -121,9 +121,10 @@ systemctl start sshd.service
 ```
 ## Configuramos la red cableada
 ```bash
+systemctl enable systemd-resolved.service
+systemctl start systemd-resolved.service
 systemctl enable NetworkManager
 systemctl start NetworkManager
-systemctl start systemd-resolved.service
 ```
 
 ## Configura la conexión wifi
@@ -140,7 +141,7 @@ git config --global user.name "John Doe"
 git config --global user.email johndoe@example.com
 git config --global core.editor vim
 git config --global merge.tool meld
-git config core.autocrlf true
+git config --global core.autocrlf true
 ```
 
 ## Instalamos aurman alternativa de yaourt
@@ -245,9 +246,17 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 sudo reboot
 ```
 
-## Reconfiguramos Xorg con los valores de Nvidia
+## Reducir el número de terminales gertty a solo 2 ctrl+alt+F1 estara corriendo i3 y ctrl+alt+F2 por temas de emergencias 
 ```bash
-sudo nvidia-xconfig
+sudo vim /etc/systemd/logind.conf
+#se descomenta y se coloca el número 2
+NAutoVTs=2
+```
+## reiniciamos
+```bash
+sudo mkinitcpio -p linux-ck-haswell 
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+sudo reboot
 ```
 
 
@@ -266,13 +275,6 @@ sudo pacman -S i3-gaps i3lock i3blocks dunst lxdm-gtk3 lxappearance rxvt-unicode
 sudo vim /etc/lxdm/lxdm.conf
 	session=/usr/bin/i3
 sudo systemctl enable lxdm.service
-```
-
-## Reducir el número de terminales gertty a solo 2 ctrl+alt+F1 estara corriendo i3 y ctrl+alt+F2 por temas de emergencias 
-```bash
-sudo vim /etc/systemd/logind.conf
-#se descomenta y se coloca el número 2
-NAutoVTs=2
 ```
 
 ## Instalar si se queire ventanas trasparentes
@@ -354,11 +356,14 @@ urxvt.keysym.Control-Left:  \033[1;5D
 urxvt.keysym.Control-Right: \033[1;5C
 ```
 
-
 # 6. Fin 
 ## Reiniciamos
 ```bash
 sudo reboot
+```
+## Reconfiguramos Xorg con los valores de Nvidia
+```bash
+sudo nvidia-xconfig
 ```
 
 ## Busqueda de posibles problemas
