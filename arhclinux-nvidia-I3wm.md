@@ -170,9 +170,11 @@ makepkg -si
 
 ## habilitamos el repositorio multilib
 ```bash
+sudo vim /etc/pacman.conf
+
 #Eliminamos el # del parametro NoExtract y aniadimos la siguente linea si instalamos i3 y debe quedar asi esto evita que instala cosas inecesarias
 NoExtract   = usr/bin/cacafire usr/bin/aafire
-sudo vim /etc/pacman.conf
+
 #Eliminamos el # y debe quedar asi
 [multilib]
 Include = /etc/pacman.d/mirrorlist
