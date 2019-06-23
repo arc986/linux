@@ -396,3 +396,14 @@ pacman -Rsdn $(pacman -Qqdt)
 pacman -Scc
 aurman -Scc
 ```
+
+# 7. Snap y AppArmor
+## Instalar
+```bash
+yay -S snapd
+sudo pacman -Ss apparmor
+sudo systemctl enable --now apparmor.service
+sudo systemctl enable --now snapd.apparmor.service
+sudo systemctl enable snapd.socket
+sudo systemctl start snapd.socket
+```
