@@ -1,4 +1,4 @@
-# 1. Instalación Remota.
+# 1.0 Instalación Remota por wifi.
 
 ## Configurar contraseña de root
 ```bash
@@ -8,25 +8,40 @@ passwd
 ```bash
 systemctl start sshd
 ```
-## Configura la conexión wifi
+## Configura la red wifi
 ```bash
 wifi-menu
 ```
-
 ## Muestra la IP
 ```bash
 ip a
 ```
 
-## Montamos los discos
+
+# 1.1 Instalación Remota por cable.
+
+## Configurar contraseña de root
+```bash
+passwd
+```
+## Inicia servicio ssh
+```bash
+systemctl start sshd
+```
+## Muestra la IP
+```bash
+ip a
+```
+
+# 2. Instalar sistema base
+
+## Montamos los discos en EFI
 ```bash
 mount /dev/sda2 /mnt
 mkdir -p /mnt/boot/efi
 mount /dev/sda1 /mnt/boot/efi
-```
 
-
-# 2. Instalar sistema base
+## Instalar
 ```bash
 pacstrap /mnt base base-devel grub ntfs-3g networkmanager gvfs efibootmgr intel-ucode htop openssh
 ```
@@ -43,7 +58,7 @@ arch-chroot /mnt
 
 ## Configurar el Nombre del equipo
 ```bash
-#Nombre de la pc en minuscula sin acentos
+#Nombre de la pc en minuscula sin acentos dentro de las comillas "aqui"
 export HOMBREPC=""
 echo $HOMBREPC > /etc/hostname
 #IPv4
@@ -96,7 +111,7 @@ passwd
 ```
 ## Configurar un nuevo usuario
 ```bash
-#Hombre del usuario sin acentos ni caracteres especiales
+#Hombre del usuario sin acentos ni caracteres especiales, dentro de las comillas "aqui"
 export USERR=""
 useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash $USERR
 passwd $USERR
@@ -127,10 +142,11 @@ systemctl enable NetworkManager
 systemctl start NetworkManager
 ```
 
-## Configura la conexión wifi
+## Configura la conexión wifi permanente
 ```bash
 #el nombre que coloques a la red sera usado para iniciar el servicio
 wifi-menu
+#coloca el nombre dentro de las comillas "aqui"
 export NOMBREDELAREDWIFI=""
 netctl enable $NOMBREDELAREDWIFI
 ```
