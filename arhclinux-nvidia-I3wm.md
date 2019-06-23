@@ -157,7 +157,6 @@ git config --global user.name "John Doe"
 git config --global user.email johndoe@example.com
 git config --global core.editor vim
 git config --global merge.tool meld
-git config --global core.autocrlf true
 ```
 
 ## Instalamos aurman alternativa de yaourt
