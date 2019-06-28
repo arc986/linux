@@ -215,12 +215,13 @@ aurman -S laptop-mode-tools
 sudo systemctl enable laptop-mode.service
 sudo systemctl start laptop-mode.service
 ```
-## Se instala los controladores de la tarjeta de video y dependencias
+## Nvidia
+### Se instala los controladores de la tarjeta de video y dependencias
 ```bash
 sudo pacman -S fuse nvidia nvidia-utils nvidia-settings cuda nvidia-dkms lib32-nvidia-utils xorg-server xorg-xinit vulkan-icd-loader lib32-vulkan-icd-loader
 ```
 
-## Instalación del driver Nvidia
+### Configuraciones del driver Nvidia adicionales
 ```bash
 sudo mkdir /etc/pacman.d/hooks/
 
