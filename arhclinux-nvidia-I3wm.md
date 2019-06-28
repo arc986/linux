@@ -319,12 +319,7 @@ sudo pacman -S mplayer
 ```bash
 sudp pacman -S firefox firefox-i18n-es-mx
 ```
-## Iniciamos y configuramos nuestro firewall
-```bash
-sudo systemctl enable iptables
-sudo systemctl start iptables
-sudo systemctl status iptables
-```
+
 ## Eliminar el beep de la terminal
 ```bash
 sudo pacman -S xorg-xset
@@ -332,7 +327,57 @@ sudo pacman -S xorg-xset
 xset b off
 ```
 
-# 5. Configuraciones Cosmeticas
+# 5. Seguridad
+## Iniciamos y configuramos nuestro firewall
+```bash
+sudo systemctl enable iptables
+sudo systemctl start iptables
+sudo systemctl status iptables
+```
+## Instalamos y configuramos nuestro fail2ban
+### Instalamos
+```bash
+sudo pacman -S fail2ban
+```
+### Configuramos nuestro archivo jail
+```bash
+sudo vim /etc/fail2ban/jail.local
+#Contenido de archivo jail.local
+[DEFAULT]
+bantime = 1d
+
+[sshd]
+enabled   = true
+filter    = sshd
+banaction = iptables
+backend   = systemd
+maxretry  = 3
+findtime  = 1d
+bantime   = 1d
+ignoreip  = 127.0.0.1/8
+
+[Definition]
+logtarget = /var/log/fail2ban/fail2ban.log
+```
+### iniciamos los servicos
+```bash
+sudo systemctl enable fail2ban.service
+sudo systemctl start fail2ban.service
+sudo systemctl status fail2ban.service
+```
+
+# 6. Snap y AppArmor
+## Instalar
+```bash
+yay -S snapd
+sudo pacman -Ss apparmor
+sudo systemctl enable --now apparmor.service
+sudo systemctl enable --now snapd.apparmor.service
+sudo systemctl enable snapd.socket
+sudo reboot
+```
+
+# 7. Configuraciones Cosmeticas
 ## VIM monokai theme
 ```bash
 sudo pacman -S vim-molokai
@@ -375,7 +420,7 @@ urxvt.keysym.Control-Left:  \033[1;5D
 urxvt.keysym.Control-Right: \033[1;5C
 ```
 
-# 6. Fin 
+# 8. Fin 
 ## Reiniciamos
 ```bash
 sudo reboot
@@ -395,15 +440,4 @@ journalctl -b | grep Fail
 pacman -Rsdn $(pacman -Qqdt)
 pacman -Scc
 aurman -Scc
-```
-
-# 7. Snap y AppArmor
-## Instalar
-```bash
-yay -S snapd
-sudo pacman -Ss apparmor
-sudo systemctl enable --now apparmor.service
-sudo systemctl enable --now snapd.apparmor.service
-sudo systemctl enable snapd.socket
-sudo reboot
 ```
