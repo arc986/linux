@@ -449,6 +449,12 @@ aurman -Scc
 ```bash
 sudo pacman -S virt-manager qemu vde2 ebtables dnsmasq bridge-utils openbsd-netcat dmidecode
 ```
+## Agregar usuario al los grupos necesarios
+```bash
+sudo gpasswd -a $USER kvm
+sudo gpasswd -a $USER polkitd
+```
+
 ## iniciar servicio
 ```bash
 sudo systemctl enable libvirtd.service
