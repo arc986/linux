@@ -442,3 +442,17 @@ pacman -Rsdn $(pacman -Qqdt)
 pacman -Scc
 aurman -Scc
 ```
+
+
+# 9. KVM
+## instalar kvm
+```bash
+sudo pacman -S virt-manager qemu vde2 ebtables dnsmasq bridge-utils openbsd-netcat dmidecode
+```
+## iniciar servicio
+```bash
+sudo systemctl enable libvirtd.service
+sudo systemctl start libvirtd.service
+sudo systemctl status libvirtd.service
+```
+
