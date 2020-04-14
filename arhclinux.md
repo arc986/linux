@@ -52,8 +52,8 @@ cfdisk /dev/sda
 |4|archivos|
 |3|formato|
 |2|particiones|
-|1|gpt|
-|0|disco fisico|
+|1|gpt/MRB|
+|0|disco físico|
 
 ## Formatear particiones
 ```bash
