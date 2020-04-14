@@ -37,11 +37,11 @@ ip a
 #### Capas en el disco
 |ordes|capas|
 |---|---|
-|4|archivos|
-|3|formato|
-|2|particiones|
-|1|gpt/mbr|
-|0|disco físico|
+|4|Archivos|
+|3|Formato|
+|2|Particiones|
+|1|GPT/MBR|
+|0|Disco Físico|
 ## Crear Particiones
 ```bash
 cfdisk /dev/sda
