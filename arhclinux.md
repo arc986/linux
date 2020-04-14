@@ -45,6 +45,16 @@ cfdisk /dev/sda
 |/dev/sda2|256M|Sistema de ficheros de Linux|
 |/dev/sda3|4G|Linux swap|
 |/dev/sda4|MAX|Sistema de ficheros de Linux|
+
+#### Capas en el disco
+|ordes|capas|
+|---|---|
+|4|archivos|
+|3|formato|
+|2|particiones|
+|1|gpt|
+|0|disco fisico|
+
 ## Formatear particiones
 ```bash
 mkfs.vfat /dev/sda1
