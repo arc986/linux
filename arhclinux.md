@@ -52,10 +52,10 @@ cfdisk /dev/sda
 |4|archivos|
 |3|formato|
 |2|particiones|
-|1|gpt/MRB|
+|1|gpt/mbr|
 |0|disco físico|
 
-## Formatear particiones
+## Formato de particiones
 ```bash
 mkfs.vfat /dev/sda1
 mkfs.ext2 /dev/sda2
