@@ -44,7 +44,7 @@ ip a
 |2|Particiones|
 |1|GPT/MBR|
 |0|Disco Físico|
-## Crear Particiones
+### Crear Particiones
 ```bash
 cfdisk /dev/sda
 ```
@@ -56,7 +56,7 @@ cfdisk /dev/sda
 |/dev/sda3|4G|Linux swap|
 |/dev/sda4|MAX|Sistema de ficheros de Linux|
 
-## Formato de particiones
+### Formato de particiones
 ```bash
 mkfs.vfat /dev/sda1
 mkfs.ext2 /dev/sda2
@@ -65,7 +65,7 @@ mkfs.btrfs /dev/sda4
 ```
 
 # Montado de particiones
-## Montar particion
+### Montar particion
 ### btrfs **/**
 ```bash
 mount -o defaults,noatime,ssd,discard,space_cache,autodefrag /dev/sda4 /mnt
@@ -87,7 +87,7 @@ swapop /dev/sda3
 # 
 # 
 # Instalar sistema base
-## Instalacion Base
+### Instalacion Base
 ### Paquetes necesarios
 ```bash
 pacstrap /mnt base base-devel grub ntfs-3g gvfs efibootmgr htop openssh linux-zen linux-zen-headers linux-firmware vim
@@ -146,7 +146,7 @@ echo KEYMAP=us > /etc/vconsole.conf
 grub-install --efi-directory=/boot/efi --bootloader-id='Arch Linux' --target=x86_64-efi
 ```
 
-## Grub
+### Grub
 ### Configurar grub
 ```bash
 nvim /etc/default/grub
@@ -157,7 +157,7 @@ GRUB_PRELOAD_MODULES="part_gpt part_msdos btrfs"
 ```bash
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
-## Mkinitcpio
+### Mkinitcpio
 ### Configurar mkinitcpio
 ```bash
 nvim /etc/mkinitcpio.conf
@@ -240,7 +240,7 @@ sudo nvim /etc/systemd/logind.conf
 NAutoVTs=2
 ```
 
-## Configura la conexión wifi
+### Configura la conexión wifi
 El nombre que coloques a la configuracion sera usado para iniciar el servicio
 ### Buscar redes wifi
 ```bash
@@ -258,7 +258,7 @@ netctl start <NAME_RED_FILE>
 ```bash
 netctl enable <NAME_RED_FILE>
 ```
-## Instalación de git y configuracion
+### Instalación de git y configuracion
 ```bash
 sudo pacman -S git nvim
 git config --global user.name "John Doe"
@@ -269,11 +269,11 @@ git config --global core.editor nvim
 ```bash
 git config --global merge.tool meld
 ```
-## Instalador aour
+### Instalador aour
 ```bash
 
 ```
-## Se instalan herramientas adicionales
+### Se instalan herramientas adicionales
 ```bash
 # en mi caso se isntala la siguiente herramienta ya que mi pc sin ella no es capas de apagarse
 aurman -S laptop-mode-tools
@@ -305,8 +305,8 @@ EndSection
 ```bash
 sudo pacman -S fuse nvidia nvidia-utils nvidia-settings cuda nvidia-dkms lib32-nvidia-utils xorg-server xorg-xinit vulkan-icd-loader lib32-vulkan-icd-loader
 ```
-## hooks
-### Creamos el forlder para hooks de pacman
+### hooks
+### Creamos el folder para hooks de pacman
 ```bash
 sudo mkdir /etc/pacman.d/hooks/
 ```
@@ -455,7 +455,7 @@ options snd_hda_intel index=1
 ```bash
 sudo pacman -S i3-gaps i3lock i3blocks dunst lxappearance rxvt-unicode dmenu
 ```
-## Gestor de login lxdm-gtk3
+### Gestor de login lxdm-gtk3
 ```bash
 sudo pacman -S lxdm-gtk3
 ```
@@ -484,13 +484,13 @@ sudp pacman -S firefox firefox-i18n-es-mx
 # 
 # 
 # Seguridad
-## Iniciamos y configuramos nuestro firewall
+### Iniciamos y configuramos nuestro firewall
 ```bash
 sudo systemctl enable iptables
 sudo systemctl start iptables
 sudo systemctl status iptables
 ```
-## Instalamos y configuramos nuestro fail2ban
+### Instalamos y configuramos nuestro fail2ban
 ### Instalamos
 ```bash
 sudo pacman -S fail2ban
@@ -537,7 +537,7 @@ sudo reboot
 # 
 # 
 # Configuraciones Cosmeticas
-## vim monokai theme
+### vim monokai theme
 ```bash
 sudo pacman -S vim-molokai
 nvim ~/.vimrc
@@ -547,7 +547,7 @@ colorscheme molokai
 set t_Co=256
 ```
 
-## Menu rofi (opcional alternativo a dmenu)
+### Menu rofi (opcional alternativo a dmenu)
 ### instalacion de rofi
 ```bash
 sudo pacman -S rofi
@@ -557,7 +557,7 @@ sudo pacman -S rofi
 rofi -show run -modi run -location 1 -width 100 -lines 2 -line-margin 0 -line-padding 1 -separator-style none -font "mono 10" -columns 9 -bw 0 -disable-history -hide-scrollbar -color-window "#222222, #222222, #b1b4b3" -color-normal "#222222, #b1b4b3, #222222, #005577, #b1b4b3" -color-active "#222222, #b1b4b3, #222222, #007763, #b1b4b3" -color-urgent "#222222, #b1b4b3, #222222, #77003d, #b1b4b3" -kb-row-select "Tab" -kb-row-tab ""
 ```
 
-## urxvt
+### urxvt
 
 ### Configuracion basica urxvt
 ```bash
@@ -598,14 +598,14 @@ xrdb ~/.Xresources
 # 
 # 
 # Comandos utiles 
-## Busqueda de posibles problemas
+### Busqueda de posibles problemas
 ```bash
 journalctl -b | grep Fail
 #or
 journalctl --falied
 ```
 
-## Limpiamos nuestro sistema de paquetes huerfanos y del cache de las instalaciones
+### Limpiamos nuestro sistema de paquetes huerfanos y del cache de las instalaciones
 ```bash
 pacman -Rsdnc $(pacman -Qqdt)
 pacman -Scc
