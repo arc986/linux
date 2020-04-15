@@ -86,7 +86,6 @@ swapop /dev/sda3
 # 
 # 
 # Instalar sistema base
-### Instalacion Base
 ### Paquetes necesarios
 ```bash
 pacstrap /mnt base base-devel grub ntfs-3g gvfs efibootmgr htop openssh linux-zen linux-zen-headers linux-firmware vim
@@ -201,10 +200,10 @@ reboot
 # 
 # 
 # Primer inicio
-### removemos paquetes inecesarios e instalamos otros
+### Remover paquetes inecesarios e instalamos neovim
 ```bash
 sudo pacman -Rncs vim
-sudo pacman -S nvim
+sudo pacman -S neovim
 ```
 
 ### iniciamos el servicio de SSH
@@ -464,17 +463,20 @@ sudo nvim /etc/lxdm/lxdm.conf
 	session=/usr/bin/i3
 sudo systemctl enable lxdm.service
 ```
-
+# 
+# 
 # Administrador de Archivos
 ```bash
 sudo pacman -S mc
 ```
-
+# 
+# 
 # Reproductor de musica y video
 ```bash
 sudo pacman -S mplayer
 ```
-
+# 
+# 
 # Navegador web
 ```bash
 sudp pacman -S firefox firefox-i18n-es-mx
@@ -535,8 +537,9 @@ sudo reboot
 ```
 # 
 # 
-# Configuraciones Cosmeticas
-### vim monokai theme
+# paquetes adicioanes y configuraciones
+
+## vim monokai theme
 ```bash
 sudo pacman -S vim-molokai
 nvim ~/.vimrc
@@ -547,7 +550,7 @@ set t_Co=256
 ```
 
 ### Menu rofi (opcional alternativo a dmenu)
-### instalacion de rofi
+## rofi
 ```bash
 sudo pacman -S rofi
 ```
@@ -556,7 +559,7 @@ sudo pacman -S rofi
 rofi -show run -modi run -location 1 -width 100 -lines 2 -line-margin 0 -line-padding 1 -separator-style none -font "mono 10" -columns 9 -bw 0 -disable-history -hide-scrollbar -color-window "#222222, #222222, #b1b4b3" -color-normal "#222222, #b1b4b3, #222222, #005577, #b1b4b3" -color-active "#222222, #b1b4b3, #222222, #007763, #b1b4b3" -color-urgent "#222222, #b1b4b3, #222222, #77003d, #b1b4b3" -kb-row-select "Tab" -kb-row-tab ""
 ```
 
-### urxvt
+## urxvt
 
 ### Configuracion basica urxvt
 ```bash
