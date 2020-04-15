@@ -64,8 +64,7 @@ mkswap /dev/sda3
 mkfs.btrfs /dev/sda4
 ```
 
-# Montado de particiones
-### Montar particion
+### Montar particiones
 ### btrfs **/**
 ```bash
 mount -o defaults,noatime,ssd,discard,space_cache,autodefrag /dev/sda4 /mnt
