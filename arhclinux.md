@@ -51,9 +51,9 @@ cfdisk /dev/sda
 #### cfdisk example:
 |Disposit.|Tamaño|Tipo|
 |---|---|---|
-|/dev/sda1|4M|Sistema EFI|
+|/dev/sda1|2M|Sistema EFI|
 |/dev/sda2|256M|Sistema de ficheros de Linux|
-|/dev/sda3|4G|Linux swap|
+|/dev/sda3|2G / 4G / 8G|Linux swap|
 |/dev/sda4|MAX|Sistema de ficheros de Linux|
 
 ### Formato de particiones
@@ -72,12 +72,12 @@ mount -o defaults,noatime,ssd,discard,space_cache,autodefrag /dev/sda4 /mnt
 ### ext2 **/boot**
 ```bash
 mkdir /boot
-mount -o /dev/sda2 /mnt/boot
+mount /dev/sda2 /mnt/boot
 ```
 ### vfat **/boot/efi**
 ```bash
 mkdir /mnt/boot/efi
-mount -o /dev/sda1 /mnt/boot/efi
+mount /dev/sda1 /mnt/boot/efi
 ```
 ### **swap**
 ```bash
@@ -85,6 +85,7 @@ swapop /dev/sda3
 ```
 # 
 # 
+
 # Instalar sistema base
 ### Paquetes necesarios
 ```bash
