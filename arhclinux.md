@@ -1,8 +1,5 @@
 [TOC]
 
-# 
-# 
-
 # Instalación Remota
 instalacion de forma remota
 
@@ -41,8 +38,7 @@ systemctl start sshd
 ```bash
 ip a
 ```
-# 
-# 
+
 # Particiones
 ### Capas en el disco
 
@@ -92,8 +88,6 @@ mount /dev/sda1 /mnt/boot/efi
 ```bash
 swapon /dev/sda3
 ```
-# 
-# 
 
 # Instalar sistema base
 ### Paquetes necesarios
@@ -223,8 +217,6 @@ umount -R /mnt
 reboot
 ```
 
-# 
-# 
 # Primer inicio
 
 ### Configura la conexión
@@ -356,9 +348,6 @@ sudo systemctl start laptop-mode.service
 yay -S wd719x-firmware aic94xx-firmware
 ```
 
-# 
-# 
-
 # **INTEL**
 ### Se instala los controladores de la tarjeta de video y dependencias
 ```bash
@@ -375,8 +364,7 @@ Section "Device"
 	#Option      "AccelMethod"  "uxa" # fallback
 EndSection
 ```
-# 
-# 
+
 # **NVidia**
 ### Se instala los controladores de la tarjeta de video y dependencias
 ```bash
@@ -434,8 +422,7 @@ sudo reboot
 ```bash
 sudo nvidia-xconfig
 ```
-# 
-# 
+
 # **AMD**
 ### Se instala los controladores de la tarjeta de video y dependencias
 ```bash
@@ -493,8 +480,7 @@ Section "Screen"
        EndSubSection
 EndSection
 ```
-# 
-# 
+
 # Instalación del driver de sonido
 ### Driver de sonido
 ```bash
@@ -502,8 +488,7 @@ sudo pacman -S pulseaudio pulseaudio-alsa alsa-utils alsa-plugins alsa-lib
 ```
 ### opcional
 * pavucontrol
-# 
-# 
+
 # Elementos Graficos necesarios
 ### Instalación de las fuentes Necesarias
 ```bash
@@ -525,9 +510,6 @@ sudo nvim /etc/modprobe.d/alsa-base.conf
 options snd_mia index=0
 options snd_hda_intel index=1
 ```
-
-# 
-# 
 
 # Dwm
 
@@ -606,11 +588,6 @@ nvim ~/.config/dwm/autostart.sh
 conky &
 ```
 
-
-
-# 
-# 
-
 # i3wm
 
 ### paquetes necesarios
@@ -628,27 +605,22 @@ sudo nvim /etc/lxdm/lxdm.conf
 	session=/usr/bin/i3
 sudo systemctl enable lxdm.service
 ```
-# 
-# 
+
 # Administrador de Archivos
 ```bash
 sudo pacman -S mc
 ```
-# 
-# 
+
 # Reproductor de musica y video
 ```bash
 sudo pacman -S mplayer
 ```
-# 
-# 
+
 # Navegador web
 ```bash
 sudp pacman -S firefox firefox-i18n-es-mx
 ```
 
-# 
-# 
 # Seguridad
 ### Iniciamos y configuramos nuestro firewall
 ```bash
@@ -687,8 +659,7 @@ sudo systemctl enable fail2ban.service
 sudo systemctl start fail2ban.service
 sudo systemctl status fail2ban.service
 ```
-# 
-# 
+
 # Snap y AppArmor
 ### Instalar
 
@@ -700,8 +671,7 @@ sudo systemctl enable --now snapd.apparmor.service
 sudo systemctl enable snapd.socket
 sudo reboot
 ```
-# 
-# 
+
 # paquetes adicioanes y configuraciones
 
 ## vim monokai theme
@@ -762,8 +732,7 @@ urxvt.keysym.Control-Right: \033[1;5C
 sudo pacman -S xorg-xrdb
 xrdb ~/.Xresources
 ```
-# 
-# 
+
 # Comandos utiles 
 ### Busqueda de posibles problemas
 ```bash
@@ -778,8 +747,6 @@ pacman -Rsdnc $(pacman -Qqdt)
 pacman -Scc
 ```
 
-# 
-# 
 # KVM
 ### instalar kvm
 ```bash
