@@ -1,7 +1,15 @@
+[TOC]
+
 # 
 # 
-# Instalación Remota por wifi.
+
+# Instalación Remota
+instalacion de forma remota
+
+## Redes wifi
+
 ### Configurar contraseña de root
+
 ```bash
 passwd
 ```
@@ -17,10 +25,10 @@ wifi-menu
 ```bash
 ip a
 ```
-# 
-# 
-# Instalación Remota por cable.
-# 
+
+
+## Redes cableadas.
+
 ### Configurar contraseña de root
 ```bash
 passwd
@@ -36,7 +44,8 @@ ip a
 # 
 # 
 # Particiones
-#### Capas en el disco
+### Capas en el disco
+
 |ordes|capas|
 |---|---|
 |4|Archivos|
@@ -71,7 +80,7 @@ mount -o defaults,noatime,ssd,discard,space_cache,autodefrag /dev/sda4 /mnt
 ```
 ### ext2 **/boot**
 ```bash
-mkdir /boot
+mkdir /mnt/boot
 mount /dev/sda2 /mnt/boot
 ```
 ### vfat **/boot/efi**
@@ -81,7 +90,7 @@ mount /dev/sda1 /mnt/boot/efi
 ```
 ### **swap**
 ```bash
-swapop /dev/sda3
+swapon /dev/sda3
 ```
 # 
 # 
@@ -145,38 +154,54 @@ echo KEYMAP=us > /etc/vconsole.conf
 grub-install --efi-directory=/boot/efi --bootloader-id='Arch Linux' --target=x86_64-efi
 ```
 
-### Grub
-### Configurar grub
-```bash
-nvim /etc/default/grub
-#agregamos en GRUB_PRELOAD_MODULES los siguientes modulos
-GRUB_PRELOAD_MODULES="part_gpt part_msdos btrfs"
-```
-### Reconfigura el Grub
-```bash
-grub-mkconfig -o /boot/grub/grub.cfg
-```
 ### Mkinitcpio
-### Configurar mkinitcpio
+
+configuración de los modulos del kernel
+
+#### Configurar mkinitcpio
+
 ```bash
-nvim /etc/mkinitcpio.conf
+vim /etc/mkinitcpio.conf
 #Agregamos en MODULES el comando btrfs
 MODULES=(btrfs)
 #Agregamos en HOOKS al final el comando btrfs
 HOOKS=(base udev autodetect modconf block filesystems keyboard fsck btrfs)
 ```
-### Reconfigura el Mkinitcpio
+#### Reconfigura el Mkinitcpio
+
 ```bash
 mkinitcpio -p linux-zen
 ```
 
-### Configurar el grupo sudo
+### Grub
+
+Gestor de arranque
+
+#### Configurar grub
+
+```bash
+vim /etc/default/grub
+#agregamos en GRUB_PRELOAD_MODULES los siguientes modulos
+GRUB_PRELOAD_MODULES="part_gpt part_msdos btrfs"
+```
+
+#### Reconfigura el Grub
+
+```bash
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+#### Configurar el grupo sudo
+
 ```bash
 visudo
 #eliminamos el # frente a la liniea sigueinte
 %wheel ALL=(ALL) ALL
 ```
+
+
 ### Configurar la contraseña de root
+
 ```bash
 passwd
 ```
@@ -201,16 +226,73 @@ reboot
 # 
 # 
 # Primer inicio
-### Remover paquetes inecesarios e instalamos neovim
+
+### Configura la conexión
+
+El nombre que coloques a la configuracion sera usado para iniciar el servicio <NAME_RED_FILE>
+
+## Redes Wifi
+
+### Buscar redes wifi
+
 ```bash
-sudo pacman -Rncs vim
-sudo pacman -S neovim
+wifi-menu
 ```
 
-### iniciamos el servicio de SSH
+#### Listas de redes configuradas
+
+```bash
+ls /etc/netctl/<NAME_RED_FILE>
+```
+
+#### Activar iniciar conexion
+
+```bash
+netctl start <NAME_RED_FILE>
+```
+
+#### Activar de forma permanente
+
+```bash
+netctl enable <NAME_RED_FILE>
+```
+
+
+
+## Redes cableadas
+
+#### Listas de redes configuradas
+
+```bash
+ls /etc/netctl/<NAME_RED_FILE>
+```
+
+#### Activar iniciar conexion
+
+```bash
+netctl start <NAME_RED_FILE>
+```
+
+#### Activar de forma permanente
+
+```bash
+netctl enable <NAME_RED_FILE>
+```
+
+
+
+### Iniciamos el servicio de SSH
+
 ```bash
 systemctl enable sshd.service
 systemctl start sshd.service
+```
+
+### Remover paquetes inecesarios e instalamos neovim
+
+```bash
+sudo pacman -Rncs vim
+sudo pacman -S neovim
 ```
 
 ### Configuramos la red cableada NetworkManager
@@ -232,34 +314,19 @@ NoExtract   = usr/bin/cacafire usr/bin/aafire
 [multilib]
 Include = /etc/pacman.d/mirrorlist
 ```
-### Reducir el número de terminales gertty a solo 2 reduce el consumo de ram
+### Reducir el número de terminales gertty
+
+al utilizar solo 2 reduce el consumo de ram
+
 ```bash
 sudo nvim /etc/systemd/logind.conf
 #se descomenta y se coloca el número 2
 NAutoVTs=2
 ```
 
-### Configura la conexión wifi
-El nombre que coloques a la configuracion sera usado para iniciar el servicio
-### Buscar redes wifi
-```bash
-wifi-menu
-```
-### Listas de redes configuradas
-```bash
-ls /etc/netctl/<NAME_RED_FILE>
-```
-### Activar iniciar conexion
-```bash
-netctl start <NAME_RED_FILE>
-```
-### Activar de forma permanente
-```bash
-netctl enable <NAME_RED_FILE>
-```
 ### Instalación de git y configuracion
 ```bash
-sudo pacman -S git nvim
+sudo pacman -S git
 git config --global user.name "John Doe"
 git config --global user.email johndoe@example.com
 git config --global core.editor nvim
@@ -268,19 +335,30 @@ git config --global core.editor nvim
 ```bash
 git config --global merge.tool meld
 ```
-### Instalador aour
+### Instalador aur
 ```bash
-
+cd /tmp
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+sudo pacman -Rsdnc $(pacman -Qqdt)
 ```
 ### Se instalan herramientas adicionales
 ```bash
 # en mi caso se isntala la siguiente herramienta ya que mi pc sin ella no es capas de apagarse
-aurman -S laptop-mode-tools
+yay -S laptop-mode-tools
 sudo systemctl enable laptop-mode.service
 sudo systemctl start laptop-mode.service
 ```
+### Se instalan driver adicionales
+
+```bash
+yay -S wd719x-firmware aic94xx-firmware
+```
+
 # 
 # 
+
 # **INTEL**
 ### Se instala los controladores de la tarjeta de video y dependencias
 ```bash
@@ -429,7 +507,7 @@ sudo pacman -S pulseaudio pulseaudio-alsa alsa-utils alsa-plugins alsa-lib
 # Elementos Graficos necesarios
 ### Instalación de las fuentes Necesarias
 ```bash
-sudo pacman -S ttf-liberation ttf-bitstream-vera ttf-dejavu ttf-droid ttf-freefont ttf-font-awesome ttf-ubuntu-font-family hunspell-es_pa
+sudo pacman -S ttf-liberation ttf-bitstream-vera ttf-dejavu ttf-droid ttf-freefont ttf-font-awesome ttf-ubuntu-font-family hunspell-es_pa terminus-font
 ```
 ### Instalar si se queire wallpapers (opcional)
 ```bash
@@ -450,7 +528,93 @@ options snd_hda_intel index=1
 
 # 
 # 
+
+# Dwm
+
+### Paquetes necesarios
+
+```bash
+sudo pacman -S dunst lxappearance rxvt-unicode dmenu
+```
+#### opcionales
+
+* feh --> para establecer un wallpaper
+* rofus --> como remplazo de dmenu
+* conky --> gestor de información
+
+### Clonamos el repositorio
+
+```bash
+git clone https://github.com/arc986/dwm.git
+```
+
+### Crear elementos necesarios
+
+```bash
+mkdir -p ~/.config/dwm/
+touch ~/.config/dwm/autostart.sh
+```
+
+### Compilación
+
+```bash
+cd /dwm
+make
+```
+
+### Instalación
+
+```bash
+sudo make clean install
+```
+
+### Creamos xsessions
+
+```bash
+sudo mkdir -p /usr/share/xsessions
+
+sudo nvim /usr/share/xsessions/dwm.desktop
+#contenido del archivo
+[Desktop Entry]
+Name=dwm
+Comment=improved dynamic tiling window manager
+Exec=dwm
+TryExec=dwm
+Type=Application
+X-LightDM-DesktopName=dwm
+DesktopNames=dwm
+Keywords=tiling;wm;windowmanager;window;manager;
+```
+
+### feh
+
+En caso de haber instalado feh
+
+```bash
+nvim ~/.config/dwm/autostart.sh
+#contenido del archivo
+feh --bg-scale %f /home/$USER/images/wallpaper.jpg &
+```
+
+### conky
+
+En caso de haber instalado conky
+
+```bash
+nvim ~/.config/dwm/autostart.sh
+#contenido del archivo
+conky &
+```
+
+
+
+# 
+# 
+
 # i3wm
+
+### paquetes necesarios
+
 ```bash
 sudo pacman -S i3-gaps i3lock i3blocks dunst lxappearance rxvt-unicode dmenu
 ```
@@ -605,7 +769,7 @@ xrdb ~/.Xresources
 ```bash
 journalctl -b | grep Fail
 #or
-journalctl --falied
+journalctl --failed
 ```
 
 ### Limpiamos nuestro sistema de paquetes huerfanos y del cache de las instalaciones
