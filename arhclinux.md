@@ -186,9 +186,7 @@ hwclock -w
 ### Configurar teclado
 
 ```bash
-
-1234
-1234
+echo KEYMAP=us > /etc/vconsole.conf
 ```
 
 
