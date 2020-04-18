@@ -24,6 +24,7 @@ ip a
 ```
 
 
+
 ## Redes cableadas.
 
 ### Configurar contraseña de root
@@ -37,9 +38,15 @@ systemctl start sshd
 ### Muestra la IP
 ```bash
 ip a
+# anota el nombre de la interface de tu red
 ```
 
+
+
 # Particiones
+
+
+
 ### Capas en el disco
 
 |ordes|capas|
@@ -49,7 +56,10 @@ ip a
 |2|Particiones|
 |1|GPT/MBR|
 |0|Disco Físico|
+
+
 ### Crear Particiones
+
 ```bash
 cfdisk /dev/sda
 ```
@@ -61,7 +71,10 @@ cfdisk /dev/sda
 |/dev/sda3|2G / 4G / 8G|Linux swap|
 |/dev/sda4|MAX|Sistema de ficheros de Linux|
 
+
+
 ### Formato de particiones
+
 ```bash
 mkfs.vfat /dev/sda1
 mkfs.ext2 /dev/sda2
@@ -69,7 +82,10 @@ mkswap /dev/sda3
 mkfs.btrfs /dev/sda4
 ```
 
+
+
 ### Montar particiones
+
 ### btrfs **/**
 ```bash
 mount -o defaults,noatime,ssd,discard,space_cache,autodefrag /dev/sda4 /mnt
@@ -89,28 +105,45 @@ mount /dev/sda1 /mnt/boot/efi
 swapon /dev/sda3
 ```
 
+
+
+
+
 # Instalar sistema base
+
 ### Paquetes necesarios
 ```bash
 pacstrap /mnt base base-devel grub ntfs-3g gvfs efibootmgr htop openssh linux-zen linux-zen-headers linux-firmware vim
 ```
 ### Paquetes opcionales
-* networkmanager -> no se recomienda instalar si se instala netctl
 * intel-ucode -> solo si usas procesadores intel
 ### Paquetes wifi y red cableada
-* netctl
-* wpa_supplicant
-* dialog
-* dhcpcd
+* netctl wpa_supplicant dialog dhcpcd
+
+### Paquetes virtualbox soporte Xorg
+
+* virtualbox-guest-utils xf86-video-vmware virtualbox-guest-dkms
+
+### Paquetes virtualbox sin soporte Xorg
+* virtualbox-guest-utils-nox virtualbox-guest-dkms
+
+
+
 ### Generar la tabla de particiones
 ```bash
 genfstab -pU /mnt >> /mnt/etc/fstab
 ```
+
+
 ### Entramos del sistema virtual al real como root
+
 ```bash
 arch-chroot /mnt
 ```
+
+
 ### Configurar el Nombre del equipo
+
 ```bash
 #Nombre de la pc en minuscula sin acentos dentro de las comillas "aqui"
 export HOMBREPC=""
@@ -120,11 +153,17 @@ echo "127.0.0.1 localhost $HOMBREPC" >> /etc/hosts
 #IPv6
 echo "::1 localhost $HOMBREPC" >> /etc/hosts
 ```
+
+
 ### Configurar zona Horaria
+
 ```bash
 ln -sf /usr/share/zoneinfo/America/Panama /etc/localtime
 ```
+
+
 ### Configurar idioma al español
+
 ```bash
 echo es_PA.UTF-8 UTF-8 >/etc/locale.gen
 echo LANG=es_PA.UTF-8 >/etc/locale.conf
@@ -135,18 +174,31 @@ echo export LANG=es_PA.UTF-8 >> ~/.bashrc
 echo export LC_ALL=es_PA.UTF-8 >> ~/.bashrc
 locale-gen
 ```
-### configurar hora
+
+
+### Configurar hora
+
 ```bash
 hwclock -w
 ```
-### configurar teclado
+
+
+### Configurar teclado
+
 ```bash
-echo KEYMAP=us > /etc/vconsole.conf
+
+1234
+1234
 ```
-### instalar group efi
+
+
+### Instalar group efi
+
 ```bash
 grub-install --efi-directory=/boot/efi --bootloader-id='Arch Linux' --target=x86_64-efi
 ```
+
+
 
 ### Mkinitcpio
 
@@ -167,6 +219,8 @@ HOOKS=(base udev autodetect modconf block filesystems keyboard fsck btrfs)
 mkinitcpio -p linux-zen
 ```
 
+
+
 ### Grub
 
 Gestor de arranque
@@ -185,7 +239,9 @@ GRUB_PRELOAD_MODULES="part_gpt part_msdos btrfs"
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
-#### Configurar el grupo sudo
+
+
+### Configurar el grupo sudo
 
 ```bash
 visudo
@@ -194,40 +250,51 @@ visudo
 ```
 
 
+
 ### Configurar la contraseña de root
 
 ```bash
 passwd
 ```
+
+
 ### Configurar un nuevo usuario
+
 ```bash
 #Hombre del usuario sin acentos ni caracteres especiales, dentro de las comillas "aqui"
 export USERR=""
 useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power,scanner -s /bin/bash $USERR
 passwd $USERR
 ```
+
+
 ### Salimos de del sistema real al virtual
+
 ```bash
 exit
 ```
+
+
 ### Desmontamos las particiones y reiniciamos
+
 ```bash
 umount -R /mnt
 #recuerda remover el medio de instalación al reiniciar
 reboot
 ```
 
+
+
+
+
 # Primer inicio
-
-### Configura la conexión
-
-El nombre que coloques a la configuracion sera usado para iniciar el servicio <NAME_RED_FILE>
 
 ## Redes Wifi
 
 ### Buscar redes wifi
 
 ```bash
+# El nombre que coloques a la configuracion sera usado para iniciar el servicio <NAME_RED_FILE>
 wifi-menu
 ```
 
@@ -259,13 +326,37 @@ netctl enable <NAME_RED_FILE>
 ls /etc/netctl/<NAME_RED_FILE>
 ```
 
+#### Configurar netctl
+
+```bash
+#ejemplos de configuraciones del netctl segun el tipo de conexión deseada
+ls /etc/netctl/example/
+
+#conexion basica dhcp
+cp /etc/netctl/example/ethernet-dhcp /etc/netctl/<nombre de la interface>
+
+# este archivo a partir de ahora lo llamaremos NAME_RED_FILE
+# dentro del archivo se cambia el eth0 por el nombre de la interface.
+vim /etc/netctl/<NAME_RED_FILE>
+clear
+```
+
 #### Activar iniciar conexion
 
 ```bash
 netctl start <NAME_RED_FILE>
 ```
 
+#### Comprobar conexion y funcinamiento
+
+```bash
+netctl status <NAME_RED_FILE>
+ip a # para este momento ya deberiamos tener una IP
+```
+
 #### Activar de forma permanente
+
+una ves comprovado su funcionamiento usando start y luego status ya que para este momento debemos tener internet, podriamos establecer un arranque automatico en caso de que asi se dese usando:
 
 ```bash
 netctl enable <NAME_RED_FILE>
@@ -280,6 +371,8 @@ systemctl enable sshd.service
 systemctl start sshd.service
 ```
 
+
+
 ### Remover paquetes inecesarios e instalamos neovim
 
 ```bash
@@ -287,7 +380,10 @@ sudo pacman -Rncs vim
 sudo pacman -S neovim
 ```
 
+
+
 ### Configuramos la red cableada NetworkManager
+
 En caso de que instalaras networkmanager
 ```bash
 systemctl enable systemd-resolved.service
@@ -295,17 +391,25 @@ systemctl start systemd-resolved.service
 systemctl enable NetworkManager
 systemctl start NetworkManager
 ```
-### habilitamos el repositorio multilib
+
+
+### Habilitamos el repositorio multilib
+
 ```bash
 sudo nvim /etc/pacman.conf
 
-#Eliminamos el # del parametro NoExtract y aniadimos la siguente linea si instalamos i3 y debe quedar asi esto evita que instala cosas inecesarias
+# Eliminamos el # del parametro NoExtract y aniadimos la siguente linea si instalamos i3 y debe quedar asi esto evita que instala cosas inecesarias
 NoExtract   = usr/bin/cacafire usr/bin/aafire
 
-#Eliminamos el # y debe quedar asi
+# Eliminamos el # y debe quedar asi
 [multilib]
 Include = /etc/pacman.d/mirrorlist
+
+# actualizamos los repositorios
+sudo pacman -Syu
 ```
+
+
 ### Reducir el número de terminales gertty
 
 al utilizar solo 2 reduce el consumo de ram
@@ -316,18 +420,27 @@ sudo nvim /etc/systemd/logind.conf
 NAutoVTs=2
 ```
 
+
+
 ### Instalación de git y configuracion
+
 ```bash
 sudo pacman -S git
 git config --global user.name "John Doe"
 git config --global user.email johndoe@example.com
 git config --global core.editor nvim
 ```
-### meld (opcional)
+
+
+### Meld (opcional)
+
 ```bash
 git config --global merge.tool meld
 ```
-### Instalador aur
+
+
+### Instalamos el gestor de paquetes aur
+
 ```bash
 cd /tmp
 git clone https://aur.archlinux.org/yay.git
@@ -335,20 +448,30 @@ cd yay
 makepkg -si
 sudo pacman -Rsdnc $(pacman -Qqdt)
 ```
+
+
 ### Se instalan herramientas adicionales
+
 ```bash
 # en mi caso se isntala la siguiente herramienta ya que mi pc sin ella no es capas de apagarse
 yay -S laptop-mode-tools
 sudo systemctl enable laptop-mode.service
 sudo systemctl start laptop-mode.service
 ```
+
+
 ### Se instalan driver adicionales
 
 ```bash
 yay -S wd719x-firmware aic94xx-firmware
 ```
 
+
+
+
+
 # **INTEL**
+
 ### Se instala los controladores de la tarjeta de video y dependencias
 ```bash
 sudo pacman -S xorg-server xorg-xinit xorg-server-common xf86-video-intel mesa mesa-libgl vulkan-intel acpi
@@ -365,7 +488,12 @@ Section "Device"
 EndSection
 ```
 
+
+
+
+
 # **NVidia**
+
 ### Se instala los controladores de la tarjeta de video y dependencias
 ```bash
 sudo pacman -S fuse nvidia nvidia-utils nvidia-settings cuda nvidia-dkms lib32-nvidia-utils xorg-server xorg-xinit vulkan-icd-loader lib32-vulkan-icd-loader
@@ -423,7 +551,12 @@ sudo reboot
 sudo nvidia-xconfig
 ```
 
+
+
+
+
 # **AMD**
+
 ### Se instala los controladores de la tarjeta de video y dependencias
 ```bash
 sudo pacman -S xf86-video-amdgpu vulkan-radeon lib32-mesa lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau xorg-server xorg-xinit 
@@ -481,7 +614,12 @@ Section "Screen"
 EndSection
 ```
 
+
+
+
+
 # Instalación del driver de sonido
+
 ### Driver de sonido
 ```bash
 sudo pacman -S pulseaudio pulseaudio-alsa alsa-utils alsa-plugins alsa-lib
@@ -489,7 +627,10 @@ sudo pacman -S pulseaudio pulseaudio-alsa alsa-utils alsa-plugins alsa-lib
 ### opcional
 * pavucontrol
 
+
+
 # Elementos Graficos necesarios
+
 ### Instalación de las fuentes Necesarias
 ```bash
 sudo pacman -S ttf-liberation ttf-bitstream-vera ttf-dejavu ttf-droid ttf-freefont ttf-font-awesome ttf-ubuntu-font-family hunspell-es_pa terminus-font
@@ -511,7 +652,18 @@ options snd_mia index=0
 options snd_hda_intel index=1
 ```
 
-# Dwm
+
+
+
+
+# Gestores de ventana
+
+### Alternativas
+
+* dwm
+* i3wm
+
+## Dwm
 
 ### Paquetes necesarios
 
@@ -540,7 +692,7 @@ touch ~/.config/dwm/autostart.sh
 ### Compilación
 
 ```bash
-cd /dwm
+cd dwm
 make
 ```
 
@@ -588,16 +740,14 @@ nvim ~/.config/dwm/autostart.sh
 conky &
 ```
 
-# i3wm
+
+
+## i3wm
 
 ### paquetes necesarios
 
 ```bash
 sudo pacman -S i3-gaps i3lock i3blocks dunst lxappearance rxvt-unicode dmenu
-```
-### Gestor de login lxdm-gtk3
-```bash
-sudo pacman -S lxdm-gtk3
 ```
 ### Configuramos e iniciamos el servicio lxdm para que inicie i3wm por defecto
 ```bash
@@ -606,22 +756,92 @@ sudo nvim /etc/lxdm/lxdm.conf
 sudo systemctl enable lxdm.service
 ```
 
+ 
+
+
+
+# Gestor de login
+
+### Alternativas
+
+* ly --> sistema de login por **TUI**
+* lxdm-gtk3 --> sistema de login grafico
+
+## ly
+
+```bash
+yay -S ly
+sudo systemctl enable ly.service
+sudo systemctl disable getty@tty2.service
+```
+
+#### Configurar ly
+
+```bash
+# se configura 
+sudo nvim /etc/ly/config.ini
+# se descomentan las siguientes instrucciones
+lang = en
+tty = 2
+restart_cmd = /sbin/shutdown -r now
+shutdown_cmd = /sbin/shutdown -a now 
+```
+
+
+
+## lxdm-gtk3
+
+```bash
+sudo pacman -S lxdm-gtk3
+```
+
+
+
+
+
 # Administrador de Archivos
+
+## mc
+
 ```bash
 sudo pacman -S mc
 ```
+## cfiles
+```bash
+git clone https://github.com/arc986/cfiles.git
+sudo pacman -S vi fzf atool mediainfo poppler
+yay -S python-ueberzug
+cd cfiles
+make
+sudo make install
+```
+
+
+
+
 
 # Reproductor de musica y video
+
 ```bash
 sudo pacman -S mplayer
 ```
 
+
+
+
+
 # Navegador web
+
 ```bash
 sudp pacman -S firefox firefox-i18n-es-mx
 ```
 
+
+
+
+
 # Seguridad
+
 ### Iniciamos y configuramos nuestro firewall
 ```bash
 sudo systemctl enable iptables
@@ -660,7 +880,12 @@ sudo systemctl start fail2ban.service
 sudo systemctl status fail2ban.service
 ```
 
+
+
+
+
 # Snap y AppArmor
+
 ### Instalar
 
 ```bash
@@ -671,6 +896,10 @@ sudo systemctl enable --now snapd.apparmor.service
 sudo systemctl enable snapd.socket
 sudo reboot
 ```
+
+
+
+
 
 # paquetes adicioanes y configuraciones
 
@@ -685,7 +914,10 @@ set t_Co=256
 ```
 
 ### Menu rofi (opcional alternativo a dmenu)
+
+
 ## rofi
+
 ```bash
 sudo pacman -S rofi
 ```
@@ -693,6 +925,8 @@ sudo pacman -S rofi
 ```bash
 rofi -show run -modi run -location 1 -width 100 -lines 2 -line-margin 0 -line-padding 1 -separator-style none -font "mono 10" -columns 9 -bw 0 -disable-history -hide-scrollbar -color-window "#222222, #222222, #b1b4b3" -color-normal "#222222, #b1b4b3, #222222, #005577, #b1b4b3" -color-active "#222222, #b1b4b3, #222222, #007763, #b1b4b3" -color-urgent "#222222, #b1b4b3, #222222, #77003d, #b1b4b3" -kb-row-select "Tab" -kb-row-tab ""
 ```
+
+
 
 ## urxvt
 
@@ -733,7 +967,12 @@ sudo pacman -S xorg-xrdb
 xrdb ~/.Xresources
 ```
 
+
+
+
+
 # Comandos utiles 
+
 ### Busqueda de posibles problemas
 ```bash
 journalctl -b | grep Fail
@@ -747,7 +986,12 @@ pacman -Rsdnc $(pacman -Qqdt)
 pacman -Scc
 ```
 
+
+
+
+
 # KVM
+
 ### instalar kvm
 ```bash
 sudo pacman -S virt-manager qemu vde2 ebtables dnsmasq bridge-utils openbsd-netcat dmidecode
