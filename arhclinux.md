@@ -771,7 +771,7 @@ xlogin*logoPadding: 0
 Estos programas son necesarios para todos los WM mencionados.
 
 ```bash
-sudo pacman -S lxappearance rxvt-unicode dmenu 
+sudo pacman -S lxappearance rxvt-unicode dmenu
 ```
 
 #### opcional
