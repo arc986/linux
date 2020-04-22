@@ -295,7 +295,7 @@ reboot
 ### Buscar redes wifi
 
 ```bash
-# El nombre que coloques a la configuracion sera usado para iniciar el servicio <NAME_RED_FILE>
+# El nombre que coloques a la Configuración sera usado para iniciar el servicio <NAME_RED_FILE>
 wifi-menu
 ```
 
@@ -336,7 +336,7 @@ Name=enp0s3
 [Network]
 DHCP=ipv4
 ```
-### Servicios y configuraciones requeridas
+### Servicios y Configuraciónes requeridas
 ```bash
 sudo systemctl start systemd-networkd.service
 sudo systemctl start systemd-resolved
@@ -361,7 +361,7 @@ ls /etc/netctl/<NAME_RED_FILE>
 #### Configurar netctl
 
 ```bash
-#ejemplos de configuraciones del netctl segun el tipo de conexión deseada
+#ejemplos de Configuraciónes del netctl segun el tipo de conexión deseada
 ls /etc/netctl/example/
 
 #conexion basica dhcp
@@ -454,7 +454,7 @@ NAutoVTs=2
 
 
 
-### Instalación de git y configuracion
+### Instalación de git y Configuración
 
 ```bash
 sudo pacman -S git
@@ -564,7 +564,7 @@ MODULES=(fuse nvidia nvidia_modeset nvidia_uvm nvidia_drm)
 ```
 ### Se configura el grub para optimizar Nvidia
 ```bash
-#se modifica el group para añadir la configuracion de nvidia
+#se modifica el group para añadir la Configuración de nvidia
 sudo nvim /etc/default/grub
 GRUB_CMDLINE_LINUX_DEFAULT="nvidia-drm.modeset=1 quiet"
 ```
@@ -674,10 +674,10 @@ sudo pacman -S feh
 ### Eliminar el beep de la terminal (opcional)
 ```bash
 sudo pacman -S xorg-xset
-#se pone dentro del archivo config del i3
+
 xset b off
 ```
-### configuracion adicional para entornos con audio intel
+### Configuración adicional para entornos con audio intel
 ```bash
 sudo nvim /etc/modprobe.d/alsa-base.conf
 options snd_mia index=0
@@ -697,26 +697,52 @@ options snd_hda_intel index=1
 
 ## XDM
 
+### Programas necesarios
+
 ```bash
-sudo pacman -S xorg-xdm
+sudo pacman -S xorg-xdm xorg-xset xorg-xrdb
+```
 
+### Configuración del servicio
+
+```bash
 sudo systemctl enable xdm.service
+```
 
-nvim ~/.xsession
+### Configuración de inicio de sesion
+
+```bash
+touch $HOME/.xsession
+chmod 700 $HOME/.xsession
+nvim $HOME/.xsession
 # Contenido del archivo
 xrdb -merge $HOME/.Xresources
 xset b off
+setxkbmap -layout es
+```
 
-chmod 700 ~/.xsession
+### Configuraciónes de segudidad
 
+#### Xservers
+
+```bash
 sudo nvim /etc/X11/xdm/Xservers
 # se comenta
 #:0 local /usr/bin/X :0  -nolisten tcp
 # y se cambia por
-:0 local /usr/bin/X
+:0 local /usr/bin/X :0
 ```
 
-### xdm configurar apariencia
+#### xdm-config
+
+```bash
+sudo nvim /etc/X11/xdm/xdm-config
+# modificar de true a false
+DisplayManager*authorize:       false
+```
+
+
+### Configuraciónes de apariencia
 
 ```bash
 sudo nvim /etc/X11/xdm/Xresources
@@ -726,13 +752,7 @@ xlogin*logoFileName: /usr/share/xdm/pixmaps/xorg-bw.xpm
 
 # cambia de valor a 0
 xlogin*logoPadding: 0 
-
-sudo nvim /etc/X11/xdm/xdm-config
-# modificar de true a false
-DisplayManager*authorize:       false
 ```
-
-
 
 
 
@@ -746,12 +766,26 @@ DisplayManager*authorize:       false
 | bspwm      | Ocupa 2 procesos y es 5M de ram mas pesado que dwm, altamente configurable y no necesitas compilación como en caso de dwm |
 | i3wm       | Es de los mas amistosos y faciles de usar                    |
 
+### Programas necesarios
+
+Estos programas son necesarios para todos los WM mencionados.
+
+```bash
+sudo pacman -S lxappearance rxvt-unicode dmenu 
+```
+
+#### opcional
+
+* dunst
+
+
+
 ## Dwm
 
 ### Programas necesarios
 
 ```bash
-sudo pacman -S dunst lxappearance rxvt-unicode dmenu slock
+sudo pacman -S slock
 ```
 #### opcionales
 
@@ -841,7 +875,7 @@ dwm
 ### Programas necesarios
 
 ```bash
-sudo pacman -S dunst lxappearance rxvt-unicode dmenu bspwm sxhkd xdo
+sudo pacman -S bspwm sxhkd xdo
 ```
 
 ### Configuración inicial
@@ -867,7 +901,7 @@ bspwm
 ### paquetes necesarios
 
 ```bash
-sudo pacman -S i3-gaps i3lock i3blocks dunst lxappearance rxvt-unicode dmenu
+sudo pacman -S i3-gaps i3lock i3blocks
 ```
 ### Configuramos e iniciamos el servicio lxdm para que inicie i3wm por defecto
 ```bash
@@ -912,14 +946,6 @@ sudo pacman -S mplayer
 
 
 # Navegador web
-
-## qutebrowser
-
-```bash
-sudo pacman -S qutebrowser
-```
-
-
 
 ## Firefox
 
@@ -990,7 +1016,7 @@ sudo reboot
 
 
 
-# paquetes adicioanes y configuraciones
+# paquetes adicioanes y Configuraciónes
 
 ## vim monokai theme
 ```bash
@@ -1019,10 +1045,10 @@ rofi -show run -modi run -location 1 -width 100 -lines 2 -line-margin 0 -line-pa
 
 ## urxvt
 
-### Configuracion basica urxvt
+### Configuración basica urxvt
 ```bash
 nvim ~/.Xresources
-#Configuraciones del archivo
+#Configuraciónes del archivo
 
 URxvt.clipboard.autocopy: false
 
@@ -1050,7 +1076,7 @@ urxvt.keysym.Control-Down:  \033[1;5B
 urxvt.keysym.Control-Left:  \033[1;5D
 urxvt.keysym.Control-Right: \033[1;5C
 ```
-### Recargar configuraciones urxvt
+### Recargar Configuraciónes urxvt
 ```bash
 sudo pacman -S xorg-xrdb
 xrdb ~/.Xresources
