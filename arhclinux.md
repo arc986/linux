@@ -115,7 +115,10 @@ swapon /dev/sda3
 ```bash
 pacstrap /mnt base base-devel grub ntfs-3g gvfs efibootmgr htop openssh linux-zen linux-zen-headers linux-firmware vim
 ```
+Systemctl ya incorpora systemd-networkd.service para gestionar redes
+
 ### Paquetes opcionales
+
 * intel-ucode -> solo si usas procesadores intel
 ### Paquetes wifi y red cableada
 * netctl wpa_supplicant dialog dhcpcd
@@ -317,6 +320,37 @@ netctl enable <NAME_RED_FILE>
 
 
 ## Redes cableadas
+
+## systemd-networkd
+
+[systemd-networkd](https://wiki.archlinux.org/index.php/Systemd-networkd)
+
+### Adaptador con cable mediante DHCP
+
+```bash
+/etc/systemd/network/20-wired.network
+# contenido del archivo 
+[Match]
+Name=enp0s3
+
+[Network]
+DHCP=ipv4
+```
+### Servicios y configuraciones requeridas
+```bash
+sudo systemctl start systemd-networkd.service
+sudo systemctl start systemd-resolved
+
+systemctl status systemd-networkd.service
+systemctl status systemd-resolved
+
+sudo systemctl enable systemd-networkd.service
+sudo systemctl enable systemd-resolved.service
+```
+
+
+
+## Netctl
 
 #### Listas de redes configuradas
 
@@ -654,19 +688,70 @@ options snd_hda_intel index=1
 
 
 
+# Gestor de login
+
+### Alternativas
+
+* ly --> sistema de login por **TUI**
+* lxdm-gtk3 --> sistema de login grafico
+
+## XDM
+
+```bash
+sudo pacman -S xorg-xdm
+
+sudo systemctl enable xdm.service
+
+nvim ~/.xsession
+# Contenido del archivo
+xrdb -merge $HOME/.Xresources
+xset b off
+
+chmod 700 ~/.xsession
+
+sudo nvim /etc/X11/xdm/Xservers
+# se comenta
+#:0 local /usr/bin/X :0  -nolisten tcp
+# y se cambia por
+:0 local /usr/bin/X
+```
+
+### xdm configurar apariencia
+
+```bash
+sudo nvim /etc/X11/xdm/Xresources
+# comenta esta lineas para eliminar los logos
+xlogin*logoFileName: /usr/share/xdm/pixmaps/xorg.xpm
+xlogin*logoFileName: /usr/share/xdm/pixmaps/xorg-bw.xpm
+
+# cambia de valor a 0
+xlogin*logoPadding: 0 
+
+sudo nvim /etc/X11/xdm/xdm-config
+# modificar de true a false
+DisplayManager*authorize:       false
+```
+
+
+
+
+
 # Gestores de ventana
 
 ### Alternativas
 
-* dwm
-* i3wm
+| Tilling WM | Detalles                                                     |
+| ---------- | ------------------------------------------------------------ |
+| dwm        | Ocupa 1 proceso y es el mas ligero.                          |
+| bspwm      | Ocupa 2 procesos y es 5M de ram mas pesado que dwm, altamente configurable y no necesitas compilación como en caso de dwm |
+| i3wm       | Es de los mas amistosos y faciles de usar                    |
 
 ## Dwm
 
-### Paquetes necesarios
+### Programas necesarios
 
 ```bash
-sudo pacman -S dunst lxappearance rxvt-unicode dmenu
+sudo pacman -S dunst lxappearance rxvt-unicode dmenu slock
 ```
 #### opcionales
 
@@ -685,6 +770,7 @@ git clone https://github.com/arc986/dwm.git
 ```bash
 mkdir -p ~/.config/dwm/
 touch ~/.config/dwm/autostart.sh
+chmod +x ~/.config/dwm/autostart.sh
 ```
 
 ### Compilación
@@ -701,6 +787,8 @@ sudo make clean install
 ```
 
 ### Creamos xsessions
+
+En caso de XDM no es necesaria la creacion del dwm.desktop
 
 ```bash
 sudo mkdir -p /usr/share/xsessions
@@ -728,7 +816,7 @@ nvim ~/.config/dwm/autostart.sh
 feh --bg-scale %f /home/$USER/images/wallpaper.jpg &
 ```
 
-### conky
+### dwm + conky
 
 En caso de haber instalado conky
 
@@ -736,6 +824,40 @@ En caso de haber instalado conky
 nvim ~/.config/dwm/autostart.sh
 #contenido del archivo
 conky &
+```
+
+### dwm + XDM
+
+```bash
+nvim .xsession
+# agregar al final del archivo
+dwm
+```
+
+
+
+## bspwm
+
+### Programas necesarios
+
+```bash
+sudo pacman -S dunst lxappearance rxvt-unicode dmenu bspwm sxhkd xdo
+```
+
+### Configuración inicial
+
+```bash
+mkdir -p ~/.config/{bspwm,sxhkd}
+cp /usr/share/doc/bspwm/examples/bspwmrc .config/bspwm/
+cp /usr/share/doc/bspwm/examples/sxhkdrc .config/sxhkd/
+```
+
+### bspwm + XDM
+
+```bash
+nvim .xsession
+# agregar al final del archivo
+bspwm
 ```
 
 
@@ -755,45 +877,6 @@ sudo systemctl enable lxdm.service
 ```
 
  
-
-
-
-# Gestor de login
-
-### Alternativas
-
-* ly --> sistema de login por **TUI**
-* lxdm-gtk3 --> sistema de login grafico
-
-## ly
-
-```bash
-yay -S ly
-sudo systemctl enable ly.service
-sudo systemctl disable getty@tty2.service
-```
-
-#### Configurar ly
-
-```bash
-# se configura 
-sudo nvim /etc/ly/config.ini
-# se descomentan las siguientes instrucciones
-lang = en
-tty = 2
-restart_cmd = /sbin/shutdown -r now
-shutdown_cmd = /sbin/shutdown -a now 
-```
-
-
-
-## lxdm-gtk3
-
-```bash
-sudo pacman -S lxdm-gtk3
-```
-
-
 
 
 
@@ -830,11 +913,19 @@ sudo pacman -S mplayer
 
 # Navegador web
 
+## qutebrowser
+
 ```bash
-sudp pacman -S firefox firefox-i18n-es-mx
+sudo pacman -S qutebrowser
 ```
 
 
+
+## Firefox
+
+```bash
+sudo pacman -S firefox firefox-i18n-es-mx
+```
 
 
 
@@ -980,8 +1071,8 @@ journalctl --failed
 
 ### Limpiamos nuestro sistema de paquetes huerfanos y del cache de las instalaciones
 ```bash
-pacman -Rsdnc $(pacman -Qqdt)
-pacman -Scc
+sudo pacman -Rsdnc $(pacman -Qqdt)
+sudo pacman -Scc
 ```
 
 
