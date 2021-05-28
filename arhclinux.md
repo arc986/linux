@@ -656,6 +656,20 @@ EndSection
 ```bash
 sudo pacman -S pulseaudio pulseaudio-alsa alsa-utils alsa-plugins alsa-lib
 ```
+
+## Cancelacion de ruido
+sudo vim /etc/pulse/default.pa
+agregar
+```bash
+.ifexists module-echo-cancel.so
+load-module module-echo-cancel aec_method=webrtc source_name=echocancel sink_name=echocancel1 format=s16le rate=48000 channels=2 channel_map=stereo
+set-default-source echocancel
+set-default-sink echocancel1
+.endif
+```
+
+
+
 ### opcional
 * pavucontrol
 
